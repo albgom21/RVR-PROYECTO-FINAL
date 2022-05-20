@@ -1,5 +1,9 @@
 # RVR-PROYECTO-FINAL
 ## PING INVADERS
+### INTEGRANTES
+Alberto Gómez Castaño
+
+Simeón Konstantinov Petrov
 ### MECÁNICAS
 El juego es un 1vs1 que consiste en:
 - Los jugadores estarán cada uno en un extremo horizontal.
