@@ -1,8 +1,8 @@
 CC=g++
 CFLAGS=-g -I.
-DEPS = Socket.h Chat.h
-OBJ = Socket.o Chat.o
-LIBS=-lpthread
+DEPS = Socket.h Chat.h Game.h
+OBJ = Socket.o Chat.o Game.o
+LIBS=-lpthread -lSDL2
 
 %.o: %.cc $(DEPS)
 	$(CC) -g -c -o $@ $< $(CFLAGS)
