@@ -1,13 +1,14 @@
 #include "Game.h"
 #include "iostream"
 #include <SDL2/SDL.h>
-//#include "Resources.h"
+#include "Resources.h"
+#include "TextureManager.h"
 
 Game* Game::instance = nullptr;
 
 Game::Game(){
     initSDL();
-	//initResources();
+	initResources();
 }
 
 Game::~Game(){
@@ -46,21 +47,21 @@ SDL_Renderer* Game::getRenderer(){
 	return renderer_;
 }
 
-// TextureManager* Game::getTextureManager(){
-// 	return textureManager_;
-// }
+TextureManager* Game::getTextureManager(){
+	return textureManager_;
+}
 
-// void Game::initResources(){
+void Game::initResources(){
 
-// 	//Crear e inicializar textureManager
-// 	textureManager_ = new TextureManager();
-// 	textureManager_->initObject();
+	//Crear e inicializar textureManager
+	textureManager_ = new TextureManager();
+	textureManager_->initObject();
 
-// 	//Creacion de las texturas
-// 	for (auto& image : Resources::imageRoutes) {
-// 		textureManager_->loadFromImg(image.textureId, renderer_, image.filename);
-// 	}
-// }
+	//Creacion de las texturas
+	for (auto& image : Resources::imageRoutes) {
+		textureManager_->loadFromImg(image.id, renderer_, image.route);
+	}
+}
 
 void Game::destroyWindow(){
 	//Destruimos textureManager

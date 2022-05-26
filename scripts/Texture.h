@@ -4,7 +4,7 @@ using namespace std;
 
 class Texture {
 private:
-	Texture* texture_;
+	SDL_Texture* texture_;
 	SDL_Renderer* renderer_;
 	int width_;
 	int height_;
@@ -48,7 +48,7 @@ public:
 	void render(const SDL_Rect& dest, double angle, const SDL_Rect& frame) const;
 	void render(const SDL_Rect& dest, double angle) const;
 	//Devuelve la textura
-	Texture* getSDLTex() { return texture_; }
+	SDL_Texture* getSDLTex() { return texture_; }
 
 	void close();
 };

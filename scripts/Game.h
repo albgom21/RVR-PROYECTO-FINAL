@@ -1,6 +1,6 @@
 #pragma once
 #include <SDL2/SDL.h>
-//#include "TextureManager.h"
+#include "TextureManager.h"
 
 
 class Game {
@@ -9,7 +9,7 @@ private:
 	SDL_Window* window_ = nullptr;
 	SDL_Renderer* renderer_ = nullptr;
 	
-	//TextureManager* textureManager_ = nullptr;
+	TextureManager* textureManager_ = nullptr;
 
     void initSDL();
 	void initResources();
@@ -29,7 +29,7 @@ public:
 
 	SDL_Window* getWindow();
 	SDL_Renderer* getRenderer();
-	//TextureManager* getTextureManager();
+	TextureManager* getTextureManager();
 
 	void destroyWindow();
   
