@@ -1,7 +1,7 @@
 CC=g++
 CFLAGS=-g -I.
-DEPS = Socket.h Chat.h Game.h TextureManager.h Resources.h Texture.h 
-OBJ = Socket.o Chat.o Game.o TextureManager.o Resources.o Texture.o
+DEPS = Socket.h Chat.h Game.h TextureManager.h Resources.h Texture.h Vector2D.h InputHandler.h
+OBJ = Socket.o Chat.o Game.o TextureManager.o Resources.o Texture.o Vector2D.o InputHandler.o
 LIBS=-lpthread -lSDL2 -lSDL2_image
 
 %.o: %.cc $(DEPS)

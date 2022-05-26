@@ -32,6 +32,7 @@ public:
 	TextureManager* getTextureManager();
 
 	void destroyWindow();
+	void run();
   
 	static const int winWidth_ = 800;
 	static const int winHeight_ = 800; 

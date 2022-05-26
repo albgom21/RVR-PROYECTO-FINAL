@@ -1,9 +1,12 @@
 #include "Chat.h"
 #include "Game.h"
 #include "Resources.h"
+#include "InputHandler.h"
+#include <iostream> 
 
-int main(int argc, char **argv)
-{
+using namespace std;
+
+int main(int argc, char **argv) {
 
     Game* app = nullptr;
     app = Game::GetInstance();
@@ -17,8 +20,9 @@ int main(int argc, char **argv)
     SDL_RenderClear(app->getRenderer());
     background->render({0, 0, app->winWidth_, app->winHeight_}, SDL_FLIP_NONE);
     SDL_RenderPresent(app->getRenderer());
-    SDL_Delay(30000);
-    // ChatServer es(argv[1], argv[2]);
+    while (true){
+        app->run();
+    }
 
     // es.do_messages();
 

@@ -1,8 +1,9 @@
 #include "Game.h"
-#include "iostream"
+#include <iostream>
 #include <SDL2/SDL.h>
 #include "Resources.h"
 #include "TextureManager.h"
+#include "InputHandler.h"
 
 Game* Game::instance = nullptr;
 
@@ -76,4 +77,9 @@ void Game::destroyWindow(){
 
 	//Cerramos SDL
 	SDL_Quit();
+}
+
+void Game::run(){
+	HandleEvents::instance()->update();
+	if(HandleEvents::instance()->isKeyDown(SDL_SCANCODE_E)) SDL_Quit();
 }
