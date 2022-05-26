@@ -3,10 +3,20 @@
 #include <string.h>
 #include <vector>
 #include <memory>
-#include "Game.h"
 
-class GameClient
-{
+class Game;
+class Player;
+
+class GameClient {
 private:
-    Game* app = nullptr;
+    Player* _myPlayer = nullptr;
+    Game*   _app = nullptr;
+    float _y;
+
+public: 
+    GameClient();
+    void initClient();
+    void render();
+    void input();
+    void run();
 };

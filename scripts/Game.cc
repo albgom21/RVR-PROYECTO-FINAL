@@ -80,6 +80,5 @@ void Game::destroyWindow(){
 }
 
 void Game::run(){
-	HandleEvents::instance()->update();
-	if(HandleEvents::instance()->isKeyDown(SDL_SCANCODE_E)) SDL_Quit();
+
 }

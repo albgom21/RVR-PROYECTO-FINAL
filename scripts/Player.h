@@ -20,5 +20,6 @@ public:
 
     Vector2D getPos() { return _pos; }
     int16_t getNum() { return _num; }
+    Texture* getTexture() { return _txt; }
 
 };
