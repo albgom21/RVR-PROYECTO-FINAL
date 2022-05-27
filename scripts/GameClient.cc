@@ -4,9 +4,9 @@
 #include "InputHandler.h"
 #include "Resources.h" 
 #include "Constants.h"
+#include "Message.h"
 
-GameClient::GameClient(){
-    _app = nullptr;
+GameClient::GameClient(const char *s, const char *p) : socket(s, p){
     _app = Game::GetInstance();
 
     for (auto &image : Resources::imageRoutes) 
@@ -17,8 +17,15 @@ GameClient::GameClient(){
 
 }
 
-void GameClient::initClient(){
+GameClient::~GameClient() {
+    delete _myPlayer;
+    delete _app;
+}
 
+void GameClient::initClient(){
+    Message m = Message(MessageType::LOGIN, _myPlayer);
+    if (socket.send(m, socket) == -1)
+        std::cout << "ERROR: no se pudo enviar el mensaje de LOGIN\n";
 }
 
 void GameClient::render(){
@@ -28,19 +35,53 @@ void GameClient::render(){
 }
 
 void GameClient::input(){
+    bool posM = false;
+    bool escudoM = false;
+    bool balaM = false;
 	HandleEvents::instance()->update();
-	if(HandleEvents::instance()->isKeyDown(SDL_SCANCODE_W) && (_y-VELOCITY) >= 0) 
+	if(HandleEvents::instance()->isKeyDown(SDL_SCANCODE_W) && (_y-VELOCITY) >= 0){
         _y-=VELOCITY;
-    else if (HandleEvents::instance()->isKeyDown(SDL_SCANCODE_S) && (_y+VELOCITY+W_WIDTH/10) <= W_HEIGHT) 
+        _myPlayer->setPos({_myPlayer->getPos().getX(), _y});
+        posM = true;
+    }
+    else if (HandleEvents::instance()->isKeyDown(SDL_SCANCODE_S) && (_y+VELOCITY+W_WIDTH/10) <= W_HEIGHT){
         _y+=VELOCITY;
+        _myPlayer->setPos({_myPlayer->getPos().getX(), _y});
+        posM = true;
+    }
+    else if (HandleEvents::instance()->isKeyDown(SDL_SCANCODE_X) && _myPlayer->canShield() )
+    {   
+        _myPlayer->addShield();
+        escudoM = true;
+    }
+    else if (HandleEvents::instance()->isKeyDown(SDL_SCANCODE_SPACE))
+    {
+        balaM = true;
+    }
 
-    _myPlayer->setPos({_myPlayer->getPos().getX(), _y});
+    //Mandar el mensaje al servidor
+    if (posM && playing)
+    {
+        Message m(MessageType::PLAYERPOS, _myPlayer);
+        socket.send(m, socket);
+    }
+    if (escudoM && playing)
+    {
+        Message m(MessageType::ESCUDO, _myPlayer);
+        socket.send(m, socket);
+    }
+    if (balaM && playing)
+    {
+        Message m(MessageType::DISPARO, _myPlayer);
+        socket.send(m, socket);
+    }
+
 }
 
 void GameClient::run(){
-    while(true){
-    input();
-    render();
-    }
+    while(playing){
+        input();
+        render();
+    }    
         
 }

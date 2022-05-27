@@ -1,23 +1,23 @@
 CC=g++
 CFLAGS=-g -I.
-DEPS = Socket.h Chat.h Game.h TextureManager.h Resources.h Texture.h Vector2D.h InputHandler.h Player.h GameClient.h Message.h
-OBJ = Socket.o Chat.o Game.o TextureManager.o Resources.o Texture.o Vector2D.o InputHandler.o Player.o GameClient.o Message.o
+DEPS = Socket.h Chat.h Game.h TextureManager.h Resources.h Texture.h Vector2D.h InputHandler.h Player.h GameClient.h GameServer.h Message.h
+OBJ = Socket.o Chat.o Game.o TextureManager.o Resources.o Texture.o Vector2D.o InputHandler.o Player.o GameClient.o GameServer.o Message.o
 LIBS=-lpthread -lSDL2 -lSDL2_image
 
-%.o: %.cc $(DEPS)
+%.o: %.mc $(DEPS)
 	$(CC) -g -c -o $@ $< $(CFLAGS)
 
-all: cs cc
+all: ms mc
 
-cs: $(OBJ) ChatServer.o
+ms: $(OBJ) MainServer.o
 	g++ -o $@ $^ $(CFLAGS) $(LIBS)
 
-cc: $(OBJ) ChatClient.o
+mc: $(OBJ) MainClient.o
 	g++ -o $@ $^ $(CFLAGS) $(LIBS)
 
 
 .PHONY: clean
 
 clean:
-	rm -f *.o cs cc
+	rm -f *.o ms mc
 
