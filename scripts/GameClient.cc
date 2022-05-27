@@ -5,6 +5,7 @@
 #include "Resources.h" 
 #include "Constants.h"
 #include "Message.h"
+#include "GOInfo.h"
 
 GameClient::GameClient(const char *s, const char *p) : socket(s, p){
     _app = Game::GetInstance();
@@ -33,6 +34,60 @@ void GameClient::render(){
     _myPlayer->getTexture()->render({(int)_myPlayer->getPos().getX(), (int)_myPlayer->getPos().getY(), W_WIDTH/10, W_WIDTH/10});
     SDL_RenderPresent(_app->getRenderer());
 }
+
+void GameClient::net_thread()
+{
+    while (playing)
+    {
+        Message m;
+        socket.recv(m);
+
+        switch (m.getMessageType())
+        {
+            case MessageType::NEWPLAYER:
+            {
+                GOInfo p = m.getGOInfo();
+                if (m.getGOInfo().nJug != _myPlayer->getNum())
+                    players[m.getGOInfo().nJug] = p;
+                else
+                {
+                    _myPlayer->setPos(p.pos);
+                    _myPlayer->setNum(p.nJug);
+                }
+
+                break;
+            }
+            case MessageType::PLAYERPOS:
+            {
+                GOInfo p = m.getGOInfo();
+                players[m.getGOInfo().nJug] = p;
+                break;
+            }
+            case MessageType::PLAYERDEAD:
+            {
+                if (m.getGOInfo().nJug == _myPlayer->getNum())
+                {
+                    m.setMsgType(MessageType::LOGOUT);
+                    socket.send(m, socket);
+                    std::cout << "GAME OVER\n";
+
+                }
+                else
+                    std::cout << "YOU WIN!\n";
+
+
+                playing = false;
+                for (auto it = players.begin(); it != players.end(); it++)
+                    players.erase(it);
+                break;
+            }
+        }
+    }
+}
+
+
+
+
 
 void GameClient::input(){
     bool posM = false;

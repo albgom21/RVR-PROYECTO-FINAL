@@ -7,6 +7,7 @@
 
 class Game;
 class Player;
+class GOInfo;
 
 class GameClient {
 private:
@@ -15,12 +16,14 @@ private:
     float _y;
     Socket socket;
     bool playing = true;
+    std::vector<GOInfo> players;
+
 
 public: 
     GameClient(const char *s, const char *p);
     ~GameClient();
     void initClient();
-    void render();
+    void render();    
     void net_thread();
     void input();
     void run();
