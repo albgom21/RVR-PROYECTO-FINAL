@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL2/SDL.h>
 #include "TextureManager.h"
+#include "Constants.h"
 class Game {
 private:
 	
@@ -32,6 +33,6 @@ public:
 	void destroyWindow();
 	void run();
   
-	static const int winWidth_ = 800;
-	static const int winHeight_ = 800; 
+	static const int winWidth_ = W_WIDTH;
+	static const int winHeight_ = W_HEIGHT; 
 };
