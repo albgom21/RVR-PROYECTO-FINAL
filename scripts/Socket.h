@@ -66,8 +66,7 @@ public:
     /**
      *  Inicializa un Socket copiando los parámetros del socket
      */
-    Socket(struct sockaddr * _sa, socklen_t _sa_len):sd(-1), sa(*_sa),
-        sa_len(_sa_len){};
+    Socket(struct sockaddr * _sa, socklen_t _sa_len);
 
     virtual ~Socket(){};
 
@@ -84,12 +83,8 @@ public:
      */
     int recv(Serializable &obj, Socket * &sock);
 
-    int recv(Serializable &obj) //Descarta los datos del otro extremo
-    {
-        Socket * s = 0;
-
-        return recv(obj, s);
-    }
+    int recv(Serializable &obj); //Descarta los datos del otro extremo
+  
 
     /**
      *  Envía un mensaje de aplicación definido por un objeto Serializable.

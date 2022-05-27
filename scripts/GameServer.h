@@ -3,6 +3,7 @@
 #include "GOInfo.h"
 #include <vector>
 #include <memory>
+#include <mutex>
 
 class GameServer
 {

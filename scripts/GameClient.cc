@@ -13,7 +13,7 @@ GameClient::GameClient(const char *s, const char *p) : socket(s, p){
     for (auto &image : Resources::imageRoutes) 
         _app->getTextureManager()->loadFromImg(image.id, _app->getRenderer(), image.route);
 
-    _myPlayer = new Player(_app->getTextureManager()->getTexture(Resources::ID::Pug), _app->getTextureManager()->getTexture(Resources::ID::Pug), Vector2D(W_WIDTH/30, W_HEIGHT/2), 0);
+    _myPlayer = new Player(_app->getTextureManager()->getTexture(Resources::ID::Pug), _app->getTextureManager()->getTexture(Resources::ID::Pug), Vector2D(X_INI, Y_INI), 0);
     _y = _myPlayer->getPos().getY();
 
 }
@@ -31,7 +31,7 @@ void GameClient::initClient(){
 
 void GameClient::render(){
     SDL_RenderClear(_app->getRenderer());
-    _myPlayer->getTexture()->render({(int)_myPlayer->getPos().getX(), (int)_myPlayer->getPos().getY(), W_WIDTH/10, W_WIDTH/10});
+    _myPlayer->getTexture()->render({(int)_myPlayer->getPos().getX(), (int)_myPlayer->getPos().getY(),TAM_JUG, TAM_JUG});
     SDL_RenderPresent(_app->getRenderer());
 }
 
@@ -99,7 +99,7 @@ void GameClient::input(){
         _myPlayer->setPos({_myPlayer->getPos().getX(), _y});
         posM = true;
     }
-    else if (HandleEvents::instance()->isKeyDown(SDL_SCANCODE_S) && (_y+VELOCITY+W_WIDTH/10) <= W_HEIGHT){
+    else if (HandleEvents::instance()->isKeyDown(SDL_SCANCODE_S) && (_y+VELOCITY+TAM_JUG) <= W_HEIGHT){
         _y+=VELOCITY;
         _myPlayer->setPos({_myPlayer->getPos().getX(), _y});
         posM = true;

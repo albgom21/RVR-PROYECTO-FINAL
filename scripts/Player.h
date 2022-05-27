@@ -9,7 +9,7 @@ private:
     int16_t _num, _numShield;
 
 public:
-    Player(Texture* txt, Texture* txtShield, Vector2D pos, int16_t num = 0);
+    Player(Texture* txt, Texture* txtShield, Vector2D pos, int16_t num = 0): _txt(txt),_txtShield(txtShield), _pos(pos) {};
     ~Player(){}
 
     bool canShield() { return (_numShield < 3); }

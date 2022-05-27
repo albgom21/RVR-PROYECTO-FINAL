@@ -8,16 +8,12 @@
 #include "Constants.h"
 
 GameServer::GameServer(const char *s, const char *p) : socket(s, p)
-{
-}
+{}
 
 void GameServer::do_messages()
 {
-
-    if (socket.bind() == -1)
-    {
-        std::cout << "ERROR: en Bind\n";
-    }
+    if (socket.bind() == -1)    
+        std::cout << "ERROR: en Bind\n";    
 
     while (true)
     {
@@ -31,13 +27,14 @@ void GameServer::do_messages()
         {
         case MessageType::LOGIN:
         {
-            nPlayers++;
-            clients[nPlayers] = std::move(std::make_unique<Socket>(*s));
+            std::cout << "LOGEADO\n";
+            clients.push_back(std::move(std::make_unique<Socket>(*s)));
 
             GOInfo n;
             n.nJug = nPlayers;
+            n.pos = Vector2D(X_INI, Y_INI);
 
-            players[nPlayers] = n;
+            players.push_back(n);
 
             Message newPlayerConnected = Message();
             newPlayerConnected.setMsgType(MessageType::NEWPLAYER);
@@ -54,6 +51,7 @@ void GameServer::do_messages()
                     socket.send(newPlayerConnected, *s);
                 }
             }
+            nPlayers++;             
             break;
         }
 

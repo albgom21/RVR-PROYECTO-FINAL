@@ -30,6 +30,11 @@ Socket::Socket(const char* address, const char* port) :sd(-1)
     freeaddrinfo(result);
 }
 
+Socket::Socket(struct sockaddr * _sa, socklen_t _sa_len) : sd(-1), sa(*_sa),sa_len(_sa_len){
+	sd = socket(sa.sa_family,SOCK_DGRAM,0);
+    bind();
+};
+
 int Socket::recv(Serializable& obj, Socket*& sock)
 {
     struct sockaddr sa;
@@ -44,9 +49,28 @@ int Socket::recv(Serializable& obj, Socket*& sock)
         return -1;
     }
 
-    if (sock != 0)
+    if (sock == nullptr)
     {
         sock = new Socket(&sa, sa_len);
+    }
+
+    obj.from_bin(buffer);
+
+    return 0;
+}
+
+int Socket::recv(Serializable& obj)
+{
+    struct sockaddr sa;
+    socklen_t sa_len = sizeof(struct sockaddr);
+
+    char buffer[MAX_MESSAGE_SIZE];
+
+    ssize_t bytes = ::recvfrom(sd, buffer, MAX_MESSAGE_SIZE, 0, &sa, &sa_len);
+
+    if (bytes <= 0)
+    {
+        return -1;
     }
 
     obj.from_bin(buffer);
@@ -60,8 +84,7 @@ int Socket::send(Serializable& obj, const Socket& sock)
     ssize_t bytes;
     obj.to_bin();
 
-    //Enviar el objeto binario a sock usando el socket sd 
-                    //sd   
+    //Enviar el objeto binario a sock usando el socket sd                 
     bytes = sendto(sd, obj.data(), obj.size(), 0, &sock.sa, sock.sa_len);
     if (bytes <= 0)
     {
