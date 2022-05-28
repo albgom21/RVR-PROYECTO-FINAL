@@ -33,22 +33,11 @@ void GameClient::render(){
     //Jugador
     _myPlayer->getTexture()->render({(int)_myPlayer->getPos().getX(), (int)_myPlayer->getPos().getY(),TAM_JUG, TAM_JUG});
 
-    // //El otro jugador
-    // if(players.size() != 0){
-    //     Texture *t = _app->getTextureManager()->getTexture(Resources::ID::Pug);
-    //     t->render({(int)players[0].pos.getX(), (int)players[0].pos.getY(), TAM_JUG, TAM_JUG});
-    // }
-
-    Texture *t = _app->getTextureManager()->getTexture(Resources::ID::Pug);
-    for (auto it = players.begin(); it != players.end(); ++it)
-    {
-        GOInfo p = (*it);
-        std::cout << "POS OTRO JUG Y : "<< (int)p.pos.getY()<<"\n";
-        t->render({(int)p.pos.getX(), (int)p.pos.getY(), TAM_JUG, TAM_JUG});
+    //Otro jugador cuando se conecte
+    if(other){
+         Texture *t = _app->getTextureManager()->getTexture(Resources::ID::Pug);
+         t->render({(int)_otherPlayer.pos.getX(), (int)_otherPlayer.pos.getY(), TAM_JUG, TAM_JUG});
     }
-
-        
-
     SDL_RenderPresent(_app->getRenderer());
 }
 
@@ -64,11 +53,11 @@ void GameClient::net_thread()
             case MessageType::NEWPLAYER:
             {
                 GOInfo p = m.getGOInfo();
-                std::cout<< "MENSAJE N: " << p.nJug<< "\n";
-                std::cout<< "MYPLAYER N: " << _myPlayer->getNum()<< "\n";
+                //std::cout<< "MENSAJE N: " << p.nJug<< "\n";
+                //std::cout<< "MYPLAYER N: " << _myPlayer->getNum()<< "\n";
                 if (p.nJug != _myPlayer->getNum()){                   
-                    players.push_back(p);
-                    std::cout<< "LLENADO PLAYER \n";
+                    _otherPlayer = p;
+                    other = true;
                 }
                 else
                 {
@@ -81,8 +70,8 @@ void GameClient::net_thread()
             case MessageType::PLAYERPOS:
             {
                 GOInfo p = m.getGOInfo();
-               // std::cout<<"N PLAYER POS QUE ME LLEGA: "<<m.getGOInfo().nJug<<std::endl;
-                players[m.getGOInfo().nJug] = p;
+                _otherPlayer = p;
+
                 break;
             }
             case MessageType::PLAYERDEAD:
@@ -99,8 +88,7 @@ void GameClient::net_thread()
 
 
                 playing = false;
-                for (auto it = players.begin(); it != players.end(); it++)
-                    players.erase(it);
+
                 break;
             }
         }

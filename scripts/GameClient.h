@@ -4,10 +4,10 @@
 #include <vector>
 #include <memory>
 #include "Socket.h"
+#include "GOInfo.h"
 
 class Game;
 class Player;
-class GOInfo;
 
 class GameClient {
 private:
@@ -15,7 +15,8 @@ private:
     Game*   _app = nullptr;
     Socket socket;
     bool playing = true;
-    std::vector<GOInfo> players;
+    bool other = false;
+    GOInfo _otherPlayer;
 
 
 public: 
