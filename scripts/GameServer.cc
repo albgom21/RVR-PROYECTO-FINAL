@@ -27,12 +27,15 @@ void GameServer::do_messages()
         {
         case MessageType::LOGIN:
         {
-            std::cout << "LOGEADO\n";
             clients.push_back(std::move(std::make_unique<Socket>(*s)));
-
             GOInfo n;
             n.nJug = nPlayers;
-            n.pos = Vector2D(X_INI, Y_INI);
+            std::cout << "NPLAYERS: " << n.nJug <<"\n";
+            
+            if(nPlayers == 0)
+                n.pos = Vector2D(X_INI, Y_INI);
+            else
+                n.pos = Vector2D(X_INI_2, Y_INI);
 
             players.push_back(n);
 
@@ -40,8 +43,12 @@ void GameServer::do_messages()
             newPlayerConnected.setMsgType(MessageType::NEWPLAYER);
             newPlayerConnected.setGOInfo(players[nPlayers]);
 
-            for (auto it = clients.begin(); it != clients.end(); it++)
-                socket.send(newPlayerConnected, *(*it));
+            //VER SI SE PUEDE REFACTORIZAR LOS FORs YA QUE SOLO HAY A LO SUMO 2 CLIENTES
+
+            for (auto it = clients.begin(); it != clients.end(); it++){
+                  if (*((*it).get()) != *s) 
+                    socket.send(newPlayerConnected, *(*it));
+            }
 
             for (auto it = players.begin(); it != players.end(); ++it)
             {
