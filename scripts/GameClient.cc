@@ -13,8 +13,7 @@ GameClient::GameClient(const char *s, const char *p, const char *n) : socket(s, 
     for (auto &image : Resources::imageRoutes) 
         _app->getTextureManager()->loadFromImg(image.id, _app->getRenderer(), image.route);
 
-    _myPlayer = new Player(_app->getTextureManager()->getTexture(Resources::ID::Pug), 
-                    _app->getTextureManager()->getTexture(Resources::ID::Pug),std::strtol(n, NULL, 10));
+    _myPlayer = new Player(_app->getTextureManager()->getTexture(Resources::ID::P1),std::strtol(n, NULL, 10));
 }
 
 GameClient::~GameClient() {
@@ -30,13 +29,26 @@ void GameClient::initClient(){
 
 void GameClient::render(){
     SDL_RenderClear(_app->getRenderer());
+
+    //Fondo
+    Texture *t = _app->getTextureManager()->getTexture(Resources::ID::BACKGROUND);
+    t->render({0, 0, W_WIDTH, W_HEIGHT});
+
     //Jugador
     _myPlayer->getTexture()->render({(int)_myPlayer->getPos().getX(), (int)_myPlayer->getPos().getY(),TAM_JUG, TAM_JUG});
 
     //Otro jugador cuando se conecte
     if(other){
-         Texture *t = _app->getTextureManager()->getTexture(Resources::ID::Pug);
+         t = _app->getTextureManager()->getTexture(Resources::ID::P2);
          t->render({(int)_otherPlayer.pos.getX(), (int)_otherPlayer.pos.getY(), TAM_JUG, TAM_JUG});
+    }
+
+
+    t = _app->getTextureManager()->getTexture(Resources::ID::SHIELD);
+    for (auto it = shields.begin(); it != shields.end(); ++it)
+    {
+        GOInfo s = (*it);
+        t->render({(int)s.pos.getX(), (int)s.pos.getY(), TAM_SHIELD_X, TAM_SHIELD_Y});
     }
     SDL_RenderPresent(_app->getRenderer());
 }
@@ -89,6 +101,12 @@ void GameClient::net_thread()
 
                 playing = false;
 
+                break;
+            }
+            case MessageType::NEWESCUDO:
+            {
+                GOInfo s = m.getGOInfo();
+                shields.push_back(s);
                 break;
             }
         }

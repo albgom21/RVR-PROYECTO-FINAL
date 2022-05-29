@@ -15,8 +15,9 @@ public:
 private:
     std::vector<std::unique_ptr<Socket>> clients;
     std::vector<GOInfo> players;
-    std::map<std::string,GOInfo> objects;
+    std::vector<GOInfo> shields;
     
     int nPlayers = 0;
+    int nShields = 0;
     Socket socket;
 };

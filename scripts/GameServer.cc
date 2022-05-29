@@ -92,6 +92,32 @@ void GameServer::do_messages()
 
             break;
         }
+
+        case MessageType::ESCUDO:
+        {
+            GOInfo obj;
+            int offset = 100;
+            if(cm.getGOInfo().nJug == 1) offset*=-1;
+
+            obj.pos = Vector2D( cm.getGOInfo().pos.getX() + offset , cm.getGOInfo().pos.getY());
+
+            shields.push_back(obj);
+
+            nShields++;
+            
+            Message cm;
+            cm.setMsgType(MessageType::NEWESCUDO);
+            cm.setGOInfo((obj));
+            for (auto i = clients.begin(); i != clients.end(); ++i)
+                socket.send(cm, (*(*i)));
+
+            break;
+        }
+
+         
+           
+
+
         default:
             break;
         }

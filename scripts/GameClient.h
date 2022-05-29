@@ -13,10 +13,13 @@ class GameClient {
 private:
     Player* _myPlayer = nullptr;
     Game*   _app = nullptr;
+    std::vector<GOInfo> shields;
+
     Socket socket;
     bool playing = true;
     bool other = false;
     GOInfo _otherPlayer;
+    
 
 
 public: 

@@ -11,7 +11,12 @@ class Resources
 {
 public:
 	enum ID : int {
-		Pug
+		Pug,
+		P1,
+		P2,
+		BULLET,
+		SHIELD,
+		BACKGROUND
 	};
 
 	struct IMG {
