@@ -50,6 +50,15 @@ void GameClient::render(){
         GOInfo s = (*it);
         t->render({(int)s.pos.getX(), (int)s.pos.getY(), TAM_SHIELD_X, TAM_SHIELD_Y});
     }
+
+
+    // Balas
+   t = _app->getTextureManager()->getTexture(Resources::ID::BULLET);
+   for (auto it = bullets.begin(); it != bullets.end(); ++it){
+       GOInfo b = (*it).second;
+       t->render({(int)b.pos.getX(), (int)b.pos.getY(), TAM_SHIELD_Y, TAM_SHIELD_X}); // PONER CONSTANTES
+   }
+
     SDL_RenderPresent(_app->getRenderer());
 }
 
@@ -86,6 +95,14 @@ void GameClient::net_thread()
 
                 break;
             }
+            case MessageType::BALAPOS:
+            {
+                GOInfo b = m.getGOInfo();
+                bullets[b.id] = b;
+
+                break;
+            }
+
             case MessageType::PLAYERDEAD:
             {
                 if (m.getGOInfo().nJug == _myPlayer->getNum())
@@ -107,6 +124,18 @@ void GameClient::net_thread()
             {
                 GOInfo s = m.getGOInfo();
                 shields.push_back(s);
+                break;
+            }
+            case MessageType::NEWBALA:
+            {
+                GOInfo b = m.getGOInfo();
+                bullets[b.id] = b;
+                break;
+            }
+
+            case MessageType::BORRABALA:
+            {
+                bullets.erase(m.getGOInfo().id);
                 break;
             }
         }

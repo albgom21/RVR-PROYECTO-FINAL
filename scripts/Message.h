@@ -15,7 +15,9 @@ enum class MessageType: int8_t
     DISPARO = 5,
     NEWBALA = 6,
     ESCUDO = 7,
-    NEWESCUDO = 8
+    NEWESCUDO = 8,
+    BALAPOS = 9,
+    BORRABALA = 10
 };
 
 class Message: public Serializable{

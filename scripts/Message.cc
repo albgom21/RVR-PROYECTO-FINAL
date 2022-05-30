@@ -17,6 +17,7 @@ Message::Message(MessageType type_, GOInfo *obj) : type(type_)
     goInfo = GOInfo();
     goInfo.nJug = obj->nJug;
     goInfo.pos = obj->pos;
+    goInfo.id = obj->id;
 }
 
 size_t Message::getMessageSize()

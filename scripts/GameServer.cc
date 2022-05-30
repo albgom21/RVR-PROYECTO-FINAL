@@ -7,8 +7,9 @@
 #include <list>
 #include "Constants.h"
 
+
 GameServer::GameServer(const char *s, const char *p) : socket(s, p)
-{}
+{initTime = SDL_GetTicks();}
 
 void GameServer::do_messages()
 {
@@ -97,7 +98,7 @@ void GameServer::do_messages()
         {
             GOInfo obj;
             int offset = 100;
-            if(cm.getGOInfo().nJug == 1) offset*=-1;
+            if(cm.getGOInfo().nJug == 1) offset = -(-TAM_JUG+100+TAM_SHIELD_X);
 
             obj.pos = Vector2D( cm.getGOInfo().pos.getX() + offset , cm.getGOInfo().pos.getY());
 
@@ -105,19 +106,31 @@ void GameServer::do_messages()
 
             nShields++;
             
-            Message cm;
-            cm.setMsgType(MessageType::NEWESCUDO);
-            cm.setGOInfo((obj));
+            Message cm = Message(MessageType::NEWESCUDO, &obj);
             for (auto i = clients.begin(); i != clients.end(); ++i)
                 socket.send(cm, (*(*i)));
 
             break;
         }
 
-         
-           
+         case MessageType::DISPARO:
+        {
+            GOInfo* obj = new GOInfo();
+            int offset = 100;
+            if(cm.getGOInfo().nJug == 1) offset*=-1;
 
+        
+            obj->pos = Vector2D( cm.getGOInfo().pos.getX() + offset , cm.getGOInfo().pos.getY() + 25);
+            obj->nJug = cm.getGOInfo().nJug;
+            obj->id = nBullets;
+            bullets[nBullets] = obj; 
+            Message cm = Message(MessageType::NEWBALA, obj);
+            nBullets++;
+            for (auto i = clients.begin(); i != clients.end(); ++i)
+                socket.send(cm, (*(*i)));
 
+            break;
+        }
         default:
             break;
         }
@@ -125,5 +138,44 @@ void GameServer::do_messages()
         if(cm.getMessageType() != MessageType::LOGIN)
             delete s;
 
+    }
+}
+void GameServer::move_bullets(){
+    
+    if (SDL_GetTicks() - initTime > TimeTocreate)
+    {
+        
+        double_t x = 0;
+        for (auto b : bullets){
+            b.second->nJug == 1 ? x = -2 : x = 2;
+
+            if (x<0 && b.second->pos.getX() < 0)
+                bulletsDelete.push_back(b.second);
+            else if (x>0 && b.second->pos.getX() > W_WIDTH) //SUMARLE EL TAM DE LA BALA
+                bulletsDelete.push_back(b.second);
+            else {
+                b.second->pos.setX(b.second->pos.getX() + x);
+                Message msg = Message(MessageType::BALAPOS, b.second);
+                for (auto it = clients.begin(); it != clients.end(); ++it)
+                    socket.send(msg, *(*it));
+            }                
+        }
+        for (auto o = bulletsDelete.begin(); o != bulletsDelete.end(); ++o){
+            std::cout<<"SIZE: "<<bulletsDelete.size();
+            
+            Message cm = Message(MessageType::BORRABALA, *o);
+            
+            for (auto it = clients.begin(); it != clients.end(); ++it)
+                    socket.send(cm, *(*it));
+
+            bullets.erase((*o)->id);
+            bulletsDelete.remove(*o);
+            delete *o;
+        }
+        bulletsDelete.clear();
+
+      
+        
+        initTime = SDL_GetTicks();
     }
 }

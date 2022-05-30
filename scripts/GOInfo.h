@@ -4,4 +4,5 @@
 struct GOInfo{
     Vector2D pos;
     int16_t nJug;
+    int16_t id;
 };
