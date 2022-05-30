@@ -10,6 +10,18 @@
 GameServer::GameServer(const char *s, const char *p) : socket(s, p)
 {}
 
+void GameServer::move_bullets(){
+    int x = 0;
+    for (auto b : bullets){
+        b.second->nJug == 1 ? x = -2 : x = 2;
+        b.second->pos.setX((int)b.second->pos.getX() + x);
+        Message msg = Message(MessageType::BALAPOS, b.second);
+           for (auto it = clients.begin(); it != clients.end(); it++){
+                    socket.send(msg, *(*it));
+            }
+    }
+}
+
 void GameServer::do_messages()
 {
     if (socket.bind() == -1)    
@@ -30,6 +42,7 @@ void GameServer::do_messages()
             clients.push_back(std::move(std::make_unique<Socket>(*s)));
             GOInfo n;
             n.nJug = nPlayers;
+            //n.id = "h";
             std::cout << "NPLAYERS: " << n.nJug <<"\n";
             
             if(nPlayers == 0)
@@ -98,9 +111,9 @@ void GameServer::do_messages()
             GOInfo obj;
             int offset = 100;
             if(cm.getGOInfo().nJug == 1) offset*=-1;
-
+            obj.nJug = nShields;
             obj.pos = Vector2D( cm.getGOInfo().pos.getX() + offset , cm.getGOInfo().pos.getY());
-
+            //obj.id = "a";
             shields.push_back(obj);
 
             nShields++;
@@ -110,6 +123,26 @@ void GameServer::do_messages()
             cm.setGOInfo((obj));
             for (auto i = clients.begin(); i != clients.end(); ++i)
                 socket.send(cm, (*(*i)));
+
+            break;
+        }
+
+        case MessageType::DISPARO:
+        {
+            GOInfo obj;
+            int offset = 100;
+            if(cm.getGOInfo().nJug == 1) offset*=-1;
+
+            std::string bullet = "b" + std::to_string(nBullets);
+            obj.pos = Vector2D( cm.getGOInfo().pos.getX() + offset , cm.getGOInfo().pos.getY() + Y_BULLET);
+            obj.nJug = cm.getGOInfo().nJug;
+            //obj.id = bullet;
+            bullets[bullet] = &obj; 
+            Message cm;
+            cm.setMsgType(MessageType::NEWBALA);
+            cm.setGOInfo((obj));
+            //for (auto i = clients.begin(); i != clients.end(); ++i)
+            //    socket.send(cm, (*(*i)));
 
             break;
         }

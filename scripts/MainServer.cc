@@ -9,7 +9,7 @@ int main(int argc, char **argv) {
         
     while (true)
     {
-        
+       // gs.move_bullets();
     }
     
     return 0;

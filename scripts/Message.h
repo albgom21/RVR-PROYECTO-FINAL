@@ -14,8 +14,9 @@ enum class MessageType: int8_t
     PLAYERPOS = 4,
     DISPARO = 5,
     NEWBALA = 6,
-    ESCUDO = 7,
-    NEWESCUDO = 8
+    BALAPOS = 7,
+    ESCUDO = 8,
+    NEWESCUDO = 9
 };
 
 class Message: public Serializable{

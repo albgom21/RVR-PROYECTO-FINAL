@@ -3,6 +3,7 @@
 #include <string.h>
 #include <vector>
 #include <memory>
+//#include <map>
 #include "Socket.h"
 #include "GOInfo.h"
 
@@ -14,6 +15,7 @@ private:
     Player* _myPlayer = nullptr;
     Game*   _app = nullptr;
     std::vector<GOInfo> shields;
+    //std::map<std::string, GOInfo*> bullets;
 
     Socket socket;
     bool playing = true;

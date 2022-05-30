@@ -43,13 +43,21 @@ void GameClient::render(){
          t->render({(int)_otherPlayer.pos.getX(), (int)_otherPlayer.pos.getY(), TAM_JUG, TAM_JUG});
     }
 
-
+    // Escudo
     t = _app->getTextureManager()->getTexture(Resources::ID::SHIELD);
     for (auto it = shields.begin(); it != shields.end(); ++it)
     {
         GOInfo s = (*it);
         t->render({(int)s.pos.getX(), (int)s.pos.getY(), TAM_SHIELD_X, TAM_SHIELD_Y});
     }
+
+    // Balas
+   // t = _app->getTextureManager()->getTexture(Resources::ID::BULLET);
+   // for (auto it = bullets.begin(); it != bullets.end(); ++it){
+   //     GOInfo b = (*it->second);
+   //     t->render({(int)b.pos.getX(), (int)b.pos.getY(), TAM_SHIELD_Y, TAM_SHIELD_X});
+   // }
+
     SDL_RenderPresent(_app->getRenderer());
 }
 
@@ -109,6 +117,21 @@ void GameClient::net_thread()
                 shields.push_back(s);
                 break;
             }
+            /*
+            case MessageType::NEWBALA:
+            {
+                GOInfo* b = new GOInfo();
+                b->nJug = m.getGOInfo().nJug;
+                b->pos = m.getGOInfo().pos;
+                //bullets[b->id] = b;
+                break;
+            }
+            case MessageType::BALAPOS:
+            {
+                GOInfo bm = m.getGOInfo();
+               // bullets[bm.id] = &bm;
+            }
+            */
         }
     }
 }
