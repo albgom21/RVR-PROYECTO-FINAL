@@ -9,15 +9,18 @@ enum class MessageType: int8_t
 {
     LOGIN   = 0,
     LOGOUT  = 1,
+
     NEWPLAYER = 2,
     PLAYERDEAD = 3,   
     PLAYERPOS = 4,
+
     DISPARO = 5,
     NEWBALA = 6,
-    ESCUDO = 7,
-    NEWESCUDO = 8,
-    BALAPOS = 9,
-    BORRABALA = 10
+    BALAPOS = 7,
+    BORRABALA = 8,
+
+    ESCUDO = 9,
+    NEWESCUDO = 10
 };
 
 class Message: public Serializable{

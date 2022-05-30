@@ -19,7 +19,6 @@ private:
     std::vector<GOInfo> players;
     std::vector<GOInfo> shields;
     std::map<int16_t,GOInfo*> bullets;
-    std::list<GOInfo*> bulletsDelete;
 
     const float TimeTocreate = 10.0f;
     float initTime = 0.0f;

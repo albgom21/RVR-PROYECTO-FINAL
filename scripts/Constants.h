@@ -1,12 +1,19 @@
+//VENTANA
 #define W_WIDTH 800
 #define W_HEIGHT 600
 
-#define VELOCITY 5
+//JUEGO
+#define VELOCITY 3
 #define N_ESCUDOS 3
 
+//TAMAÑOS
 #define TAM_JUG W_WIDTH/10
 #define TAM_SHIELD_X 25
 #define TAM_SHIELD_Y 50
+#define TAM_BULLET_X 50
+#define TAM_BULLET_Y 25
+
+//POSICIONES INICIALES
 #define X_INI W_WIDTH/30
 #define X_INI_2 W_WIDTH-(W_WIDTH/30)-TAM_JUG
 #define Y_INI W_HEIGHT/2

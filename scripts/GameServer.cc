@@ -144,14 +144,14 @@ void GameServer::move_bullets(){
     
     if (SDL_GetTicks() - initTime > TimeTocreate)
     {
-        
+        std::list<GOInfo*> bulletsDelete;
         double_t x = 0;
         for (auto b : bullets){
-            b.second->nJug == 1 ? x = -2 : x = 2;
+            b.second->nJug == 1 ? x = -VELOCITY : x = VELOCITY;
 
-            if (x<0 && b.second->pos.getX() < 0)
+            if (x<0 && b.second->pos.getX() < -TAM_BULLET_X)
                 bulletsDelete.push_back(b.second);
-            else if (x>0 && b.second->pos.getX() > W_WIDTH) //SUMARLE EL TAM DE LA BALA
+            else if (x>0 && b.second->pos.getX() > W_WIDTH) 
                 bulletsDelete.push_back(b.second);
             else {
                 b.second->pos.setX(b.second->pos.getX() + x);
@@ -161,20 +161,13 @@ void GameServer::move_bullets(){
             }                
         }
         for (auto o = bulletsDelete.begin(); o != bulletsDelete.end(); ++o){
-            std::cout<<"SIZE: "<<bulletsDelete.size();
-            
-            Message cm = Message(MessageType::BORRABALA, *o);
+            Message msg = Message(MessageType::BORRABALA, *o);
             
             for (auto it = clients.begin(); it != clients.end(); ++it)
-                    socket.send(cm, *(*it));
+                    socket.send(msg, *(*it));
 
             bullets.erase((*o)->id);
-            bulletsDelete.remove(*o);
-            delete *o;
         }
-        bulletsDelete.clear();
-
-      
         
         initTime = SDL_GetTicks();
     }
