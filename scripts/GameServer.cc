@@ -102,7 +102,7 @@ void GameServer::do_messages()
             int offset = 110;
             if(cm.getGOInfo().nJug == 1) offset = -(-TAM_JUG_X+110+TAM_SHIELD_X);
 
-            obj.pos = Vector2D( cm.getGOInfo().pos.getX() + offset , cm.getGOInfo().pos.getY());
+            obj.pos = Vector2D( cm.getGOInfo().pos.getX() + offset , cm.getGOInfo().pos.getY()+ (TAM_JUG_Y/2) - (TAM_SHIELD_Y/2));
             obj.nJug = cm.getGOInfo().nJug;
             obj.id = nShields;
             shields[nShields] = obj;
@@ -122,7 +122,7 @@ void GameServer::do_messages()
             int offset = 50;
             if(cm.getGOInfo().nJug == 1)  offset = -(-TAM_JUG_X+50+TAM_BULLET_X);
         
-            obj->pos = Vector2D( cm.getGOInfo().pos.getX() + offset , cm.getGOInfo().pos.getY() + 25);
+            obj->pos = Vector2D( cm.getGOInfo().pos.getX() + offset , cm.getGOInfo().pos.getY() + (TAM_JUG_Y/2) - (TAM_BULLET_Y/2));
             obj->nJug = cm.getGOInfo().nJug;
             obj->id = nBullets;
             bullets[nBullets] = obj; 
@@ -145,7 +145,7 @@ void GameServer::do_messages()
 
 void GameServer::move_bullets(){
     
-    if (SDL_GetTicks() - initTime > TimeTocreate)
+    if (SDL_GetTicks() - initTime > timeUpdate)
     {
         std::list<GOInfo*> bulletsDelete;
         double_t x = 0;

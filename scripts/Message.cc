@@ -34,7 +34,7 @@ void Message::to_bin()
 {
     switch (type)
     {
-    case MessageType::LOGIN: 
+    case MessageType::LOGIN:  case MessageType::LOGOUT: 
         {
             messageSize = sizeof(MessageType) ;
             alloc_data(messageSize);
@@ -79,7 +79,7 @@ int Message::from_bin(char *bobj) {
 
     switch (type)
     {
-    case MessageType::LOGIN:
+    case MessageType::LOGIN: case MessageType::LOGOUT: 
         {
             messageSize = sizeof(MessageType);
             alloc_data(messageSize);

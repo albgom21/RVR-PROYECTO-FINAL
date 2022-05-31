@@ -104,14 +104,13 @@ void GameClient::net_thread()
 
             case MessageType::PLAYERDEAD:
             {
-                if (m.getGOInfo().nJug == _myPlayer->getNum())
-                {
-                    m.setMsgType(MessageType::LOGOUT);
-                    socket.send(m, socket);
-                    std::cout << "GAME OVER\n";
-                }
+                if (m.getGOInfo().nJug == _myPlayer->getNum())     
+                    std::cout << "GAME OVER\n";                
                 else
                     std::cout << "YOU WIN!\n";
+
+                m.setMsgType(MessageType::LOGOUT);
+                socket.send(m, socket);
 
 
                 playing = false;

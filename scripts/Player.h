@@ -12,7 +12,7 @@ public:
     Player(Texture* txt,  int16_t num): _txt(txt),_num(num) {};
     ~Player(){}
 
-    bool canShield() { return (_numShield < 3); }
+    bool canShield() { return (_numShield < N_ESCUDOS); }
 
     void setPos(Vector2D pos) { _pos = pos; }
     void setNum(int16_t num) { _num = num; }

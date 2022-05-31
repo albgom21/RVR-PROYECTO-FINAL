@@ -23,7 +23,7 @@ private:
     std::map<int16_t,GOInfo> shields;
     std::map<int16_t,GOInfo*> bullets;
 
-    const float TimeTocreate = 10.0f;
+    const float timeUpdate = 10.0f;
     float initTime = 0.0f;
     
     int nPlayers = 0;
