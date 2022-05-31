@@ -35,24 +35,23 @@ void GameClient::render(){
     t->render({0, 0, W_WIDTH, W_HEIGHT});
 
     //Jugador
-    _myPlayer->getTexture()->render({(int)_myPlayer->getPos().getX(), (int)_myPlayer->getPos().getY(),TAM_JUG, TAM_JUG});
+    _myPlayer->getTexture()->render({(int)_myPlayer->getPos().getX(), (int)_myPlayer->getPos().getY(),TAM_JUG_X, TAM_JUG_Y});
 
     //Otro jugador cuando se conecte
     if(other){
          t = _app->getTextureManager()->getTexture(Resources::ID::P2);
-         t->render({(int)_otherPlayer.pos.getX(), (int)_otherPlayer.pos.getY(), TAM_JUG, TAM_JUG});
+         t->render({(int)_otherPlayer.pos.getX(), (int)_otherPlayer.pos.getY(), TAM_JUG_X, TAM_JUG_Y});
     }
 
-
+    //Escudos
     t = _app->getTextureManager()->getTexture(Resources::ID::SHIELD);
     for (auto it = shields.begin(); it != shields.end(); ++it)
     {
-        GOInfo s = (*it);
+        GOInfo s = (*it).second;
         t->render({(int)s.pos.getX(), (int)s.pos.getY(), TAM_SHIELD_X, TAM_SHIELD_Y});
     }
 
-
-    // Balas
+    //Balas
    t = _app->getTextureManager()->getTexture(Resources::ID::BULLET);
    for (auto it = bullets.begin(); it != bullets.end(); ++it){
        GOInfo b = (*it).second;
@@ -110,7 +109,6 @@ void GameClient::net_thread()
                     m.setMsgType(MessageType::LOGOUT);
                     socket.send(m, socket);
                     std::cout << "GAME OVER\n";
-
                 }
                 else
                     std::cout << "YOU WIN!\n";
@@ -123,7 +121,7 @@ void GameClient::net_thread()
             case MessageType::NEWESCUDO:
             {
                 GOInfo s = m.getGOInfo();
-                shields.push_back(s);
+                shields[s.id] = s;
                 break;
             }
             case MessageType::NEWBALA:
@@ -138,12 +136,18 @@ void GameClient::net_thread()
                 bullets.erase(m.getGOInfo().id);
                 break;
             }
+
+            case MessageType::BORRAESCUDO:
+            {
+                GOInfo s = m.getGOInfo();
+                if(s.nJug == _myPlayer->getNum())
+                    _myPlayer->subShield();
+                shields.erase(m.getGOInfo().id);
+                break;
+            }
         }
     }
 }
-
-
-
 
 
 void GameClient::input(){
@@ -155,7 +159,7 @@ void GameClient::input(){
         _myPlayer->setPos({_myPlayer->getPos().getX(), _myPlayer->getPos().getY() - VELOCITY});
         posM = true;
     }
-    else if (HandleEvents::instance()->isKeyDown(SDL_SCANCODE_S) && (_myPlayer->getPos().getY()+VELOCITY+TAM_JUG) <= W_HEIGHT){
+    else if (HandleEvents::instance()->isKeyDown(SDL_SCANCODE_S) && (_myPlayer->getPos().getY()+VELOCITY+TAM_JUG_Y) <= W_HEIGHT){
         _myPlayer->setPos({_myPlayer->getPos().getX(), _myPlayer->getPos().getY() + VELOCITY});
         posM = true;
     }
@@ -190,8 +194,7 @@ void GameClient::input(){
 
 void GameClient::run(){
     while(playing){
-        input();
+        if(other) input();
         render();
     }    
-        
 }

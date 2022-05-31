@@ -66,7 +66,7 @@ void Game::initResources(){
 
 void Game::destroyWindow(){
 	//Destruimos textureManager
-	//delete textureManager_;
+	delete textureManager_;
 
     //Destruimos render y window
 	SDL_DestroyRenderer(renderer_);
@@ -77,8 +77,4 @@ void Game::destroyWindow(){
 
 	//Cerramos SDL
 	SDL_Quit();
-}
-
-void Game::run(){
-
 }

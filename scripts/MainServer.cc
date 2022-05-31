@@ -9,7 +9,10 @@ int main(int argc, char **argv) {
         
     while (true)
     {
-        gs.move_bullets();
+        if(!gs.fin){
+         gs.move_bullets();
+         gs.collisions();
+        }
     }
     
     return 0;

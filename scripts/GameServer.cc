@@ -59,24 +59,26 @@ void GameServer::do_messages()
                     socket.send(newPlayerConnected, *s);
                 }
             }
+
             nPlayers++;             
             break;
         }
 
         case MessageType::LOGOUT:
         {
+
             auto it = clients.begin();
 
-            while (it != clients.end() && (*((*it).get()) != *s))
+            while (it != clients.end() && (**it != *s))
                 ++it;
 
             if (it == clients.end())
-                std::cout << "ERROR: el jugador ya estaba desconectado\n";
+                std::cout << "El usuario no se encontraba conectado\n";
             else
             {
-                clients.erase((it));                      
-                Socket *delSock = (*it).release(); 
-                delete delSock;                           
+                std::cout << "Usuario desconectado" << "\n";
+                clients.erase(it);    
+                fin = true;      
             }
             break;
         }
@@ -97,12 +99,13 @@ void GameServer::do_messages()
         case MessageType::ESCUDO:
         {
             GOInfo obj;
-            int offset = 100;
-            if(cm.getGOInfo().nJug == 1) offset = -(-TAM_JUG+100+TAM_SHIELD_X);
+            int offset = 110;
+            if(cm.getGOInfo().nJug == 1) offset = -(-TAM_JUG_X+110+TAM_SHIELD_X);
 
             obj.pos = Vector2D( cm.getGOInfo().pos.getX() + offset , cm.getGOInfo().pos.getY());
-
-            shields.push_back(obj);
+            obj.nJug = cm.getGOInfo().nJug;
+            obj.id = nShields;
+            shields[nShields] = obj;
 
             nShields++;
             
@@ -116,9 +119,8 @@ void GameServer::do_messages()
          case MessageType::DISPARO:
         {
             GOInfo* obj = new GOInfo();
-            int offset = 100;
-            if(cm.getGOInfo().nJug == 1) offset*=-1;
-
+            int offset = 50;
+            if(cm.getGOInfo().nJug == 1)  offset = -(-TAM_JUG_X+50+TAM_BULLET_X);
         
             obj->pos = Vector2D( cm.getGOInfo().pos.getX() + offset , cm.getGOInfo().pos.getY() + 25);
             obj->nJug = cm.getGOInfo().nJug;
@@ -140,6 +142,7 @@ void GameServer::do_messages()
 
     }
 }
+
 void GameServer::move_bullets(){
     
     if (SDL_GetTicks() - initTime > TimeTocreate)
@@ -170,5 +173,75 @@ void GameServer::move_bullets(){
         }
         
         initTime = SDL_GetTicks();
+    }
+}
+
+void GameServer::collisions()
+{
+    std::list<GOInfo*> bulletsDelete;
+    std::list<GOInfo> shieldsDelete;
+
+    for (auto it = bullets.begin(); it != bullets.end(); ++it)
+    {
+        for (auto it2 = shields.begin(); it2 != shields.end(); ++it2)
+        {
+            SDL_Rect a, b;
+            GOInfo* bul = (*it).second;
+            GOInfo shi = (*it2).second;
+            a = {(int)bul->pos.getX(), (int)bul->pos.getY(), TAM_BULLET_X, TAM_BULLET_Y};
+            b = {(int)shi.pos.getX(), (int)shi.pos.getY(), TAM_SHIELD_X, TAM_SHIELD_Y};
+
+            if (SDL_HasIntersection(&a, &b))
+            {
+                //Borrado de escudo y bala
+                shieldsDelete.push_back((*it2).second);
+                bulletsDelete.push_back((*it).second);
+            }
+        }
+
+        for (auto it3 = players.begin(); it3 != players.end(); ++it3)
+        {
+            SDL_Rect a, b;
+            GOInfo* bul = (*it).second;
+            GOInfo pla = (*it3);
+            a = {(int)bul->pos.getX(), (int)bul->pos.getY(), TAM_BULLET_X, TAM_BULLET_Y};
+            b = {(int)pla.pos.getX(), (int)pla.pos.getY(), TAM_JUG_X, TAM_JUG_Y};
+
+            if (SDL_HasIntersection(&a, &b))
+            {
+                //Borrado de jugador y bala
+                nPlayerDelete = (*it3).nJug;
+                bulletsDelete.push_back((*it).second);
+            }
+        }
+    }
+
+    for (auto o = bulletsDelete.begin(); o != bulletsDelete.end(); ++o){
+            Message msg = Message(MessageType::BORRABALA, *o);
+            
+            for (auto it = clients.begin(); it != clients.end(); ++it)
+                    socket.send(msg, *(*it));
+
+            bullets.erase((*o)->id);
+        }
+
+    for (auto o = shieldsDelete.begin(); o != shieldsDelete.end(); ++o){
+            Message msg = Message(MessageType::BORRAESCUDO, &(*o));
+            
+            for (auto it = clients.begin(); it != clients.end(); ++it)
+                    socket.send(msg, *(*it));
+
+            shields.erase((*o).id);
+    }
+
+    for (auto o = players.begin(); o != players.end(); ++o){
+        
+        if(nPlayerDelete == (*o).nJug){
+            Message msg = Message(MessageType::PLAYERDEAD, &(*o));
+        
+        for (auto it = clients.begin(); it != clients.end(); ++it)
+                socket.send(msg, *(*it));
+            //players.erase(o);
+        }
     }
 }

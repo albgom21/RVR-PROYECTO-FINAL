@@ -17,6 +17,7 @@ public:
     void setPos(Vector2D pos) { _pos = pos; }
     void setNum(int16_t num) { _num = num; }
     void addShield() { _numShield++; }
+    void subShield() { _numShield--; }
 
     Vector2D getPos() { return _pos; }
     int16_t getNum() { return _num; }

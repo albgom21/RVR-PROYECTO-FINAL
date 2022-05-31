@@ -31,7 +31,7 @@ public:
 	inline Vector2D operator+(const Vector2D& v) const { return Vector2D(x_ + v.x_, y_ + v.y_); } // Suma de vectores
 	inline Vector2D operator-(const Vector2D& v) const { return Vector2D(x_ - v.x_, y_ - v.y_); } // Resta de vectores
 	inline Vector2D operator*(double d) const { return Vector2D(x_ * d, y_ * d); }				  // Multiplicación vector * número
-	inline double_t operator *(const Vector2D& d) const { return d.x_ * x_ + d.y_ * y_; }			  // Multiplicación vector * vector
+	inline double_t operator *(const Vector2D& d) const { return d.x_ * x_ + d.y_ * y_; }		  // Multiplicación vector * vector
 	Vector2D operator/(double d) const { return Vector2D(x_ / d, y_ / d); }						  // División vector / número
 	inline bool operator==(const Vector2D& v)const { return (x_ == v.x_ && y_ == v.y_); }		  // Comparación vector y vector
 	inline bool operator!=(const Vector2D& v)const { return !(x_ == v.x_ && y_ == v.y_); }		  // Comparación vector y vector

@@ -13,11 +13,14 @@ public:
     
     void do_messages();   
     void move_bullets();   
+    void collisions();
+    bool fin = false;
+
 
 private:
     std::vector<std::unique_ptr<Socket>> clients;
     std::vector<GOInfo> players;
-    std::vector<GOInfo> shields;
+    std::map<int16_t,GOInfo> shields;
     std::map<int16_t,GOInfo*> bullets;
 
     const float TimeTocreate = 10.0f;
@@ -26,5 +29,8 @@ private:
     int nPlayers = 0;
     int nShields = 0;
     int nBullets = 0;
+
+
+    int nPlayerDelete = -1;
     Socket socket;
 };

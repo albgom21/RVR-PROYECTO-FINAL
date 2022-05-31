@@ -20,7 +20,8 @@ enum class MessageType: int8_t
     BORRABALA = 8,
 
     ESCUDO = 9,
-    NEWESCUDO = 10
+    NEWESCUDO = 10,
+    BORRAESCUDO = 11
 };
 
 class Message: public Serializable{

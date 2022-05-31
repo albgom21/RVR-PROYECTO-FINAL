@@ -5,7 +5,6 @@
 class Game {
 private:
 	
-	
 	TextureManager* textureManager_ = nullptr;
 
 	SDL_Window* window_ = nullptr;
@@ -31,7 +30,6 @@ public:
 	TextureManager* getTextureManager();
 
 	void destroyWindow();
-	void run();
   
 	static const int winWidth_ = W_WIDTH;
 	static const int winHeight_ = W_HEIGHT; 
