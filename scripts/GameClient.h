@@ -22,6 +22,9 @@ private:
     bool other = false;
     GOInfo _otherPlayer;
 
+    const float delay = 750.0f;
+    float lastShoot = 0.0f;
+
 public: 
     GameClient(const char *s, const char *p, const char *n);
     ~GameClient();

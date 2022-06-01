@@ -48,7 +48,7 @@ void GameServer::do_messages()
 
             for (auto it = clients.begin(); it != clients.end(); it++){
                   if (*((*it).get()) != *s) 
-                    socket.send(newPlayerConnected, *(*it));
+                    if(socket.send(newPlayerConnected, *(*it)) == -1 )  std::cout << "ERROR: 0\n";;
             }
 
             for (auto it = players.begin(); it != players.end(); ++it)
@@ -56,7 +56,7 @@ void GameServer::do_messages()
                 if ((*it).nJug != cm.getGOInfo().nJug)
                 {
                     newPlayerConnected.setGOInfo(*it);
-                    socket.send(newPlayerConnected, *s);
+                   if( socket.send(newPlayerConnected, *s) == -1)  std::cout << "ERROR: 1\n";;
                 }
             }
 
@@ -78,8 +78,10 @@ void GameServer::do_messages()
             {
                 std::cout << "Usuario desconectado" << "\n";
                 clients.erase(it);    
-                fin = true;      
             }
+            if(clients.size() == 0) 
+                fin = true;      
+
             break;
         }
 
@@ -90,7 +92,7 @@ void GameServer::do_messages()
             for (auto it = clients.begin(); it != clients.end(); it++)
             {
                 if (*((*it).get()) != *s) 
-                    socket.send(cm, (*((*it).get())));
+                   if( socket.send(cm, (*((*it).get()))) ==-1)  std::cout << "ERROR: 2\n";;
             }
 
             break;
@@ -102,16 +104,36 @@ void GameServer::do_messages()
             int offset = 110;
             if(cm.getGOInfo().nJug == 1) offset = -(-TAM_JUG_X+110+TAM_SHIELD_X);
 
+
+            
             obj.pos = Vector2D( cm.getGOInfo().pos.getX() + offset , cm.getGOInfo().pos.getY()+ (TAM_JUG_Y/2) - (TAM_SHIELD_Y/2));
             obj.nJug = cm.getGOInfo().nJug;
             obj.id = nShields;
-            shields[nShields] = obj;
 
-            nShields++;
+            bool correctPos = true;
+            //Ver que al crear un escudo no colisione con otro
+            for(auto s: shields){
+                SDL_Rect a, b;
+                GOInfo newShield = obj;
+                GOInfo shi = s.second;
+                a = {(int)obj.pos.getX(), (int)obj.pos.getY(), TAM_SHIELD_X, TAM_SHIELD_Y};
+                b = {(int)shi.pos.getX(), (int)shi.pos.getY(), TAM_SHIELD_X, TAM_SHIELD_Y};
+
+                if (SDL_HasIntersection(&a, &b)){
+                    std::cout << "NO SE PUEDE CREAR ESCUDO\n"; 
+                    correctPos = false;
+                }
+            }
+            if(correctPos){
+                shields[nShields] = obj;
+
+                nShields++;
             
-            Message cm = Message(MessageType::NEWESCUDO, &obj);
-            for (auto i = clients.begin(); i != clients.end(); ++i)
-                socket.send(cm, (*(*i)));
+                Message cm = Message(MessageType::NEWESCUDO, &obj);
+                for (auto i = clients.begin(); i != clients.end(); ++i)
+                    if(socket.send(cm, (*(*i))) == -1) std::cout << "ERROR: 3\n"; 
+            }
+            
 
             break;
         }
@@ -129,7 +151,7 @@ void GameServer::do_messages()
             Message cm = Message(MessageType::NEWBALA, obj);
             nBullets++;
             for (auto i = clients.begin(); i != clients.end(); ++i)
-                socket.send(cm, (*(*i)));
+                if(socket.send(cm, (*(*i))) ==-1)  std::cout << "ERROR: 4\n";;
 
             break;
         }
@@ -160,14 +182,14 @@ void GameServer::move_bullets(){
                 b.second->pos.setX(b.second->pos.getX() + x);
                 Message msg = Message(MessageType::BALAPOS, b.second);
                 for (auto it = clients.begin(); it != clients.end(); ++it)
-                    socket.send(msg, *(*it));
+                    if(socket.send(msg, *(*it)) == -1)  std::cout << "ERROR: 5\n";;
             }                
         }
         for (auto o = bulletsDelete.begin(); o != bulletsDelete.end(); ++o){
             Message msg = Message(MessageType::BORRABALA, *o);
             
             for (auto it = clients.begin(); it != clients.end(); ++it)
-                    socket.send(msg, *(*it));
+                    if(socket.send(msg, *(*it)) ==-1)  std::cout << "ERROR: 6\n";; 
 
             bullets.erase((*o)->id);
         }
@@ -210,8 +232,13 @@ void GameServer::collisions()
             if (SDL_HasIntersection(&a, &b))
             {
                 //Borrado de jugador y bala
-                nPlayerDelete = (*it3).nJug;
                 bulletsDelete.push_back((*it).second);
+                Message msg = Message(MessageType::PLAYERDEAD, &(*it3));
+        
+                for (auto it = clients.begin(); it != clients.end(); ++it)
+                    if(socket.send(msg, *(*it)) == -1)  std::cout << "ERROR: 9\n";
+
+                
             }
         }
     }
@@ -220,7 +247,7 @@ void GameServer::collisions()
             Message msg = Message(MessageType::BORRABALA, *o);
             
             for (auto it = clients.begin(); it != clients.end(); ++it)
-                    socket.send(msg, *(*it));
+                    if(socket.send(msg, *(*it)) == -1 )std::cout << "ERROR: 7\n";
 
             bullets.erase((*o)->id);
         }
@@ -229,19 +256,8 @@ void GameServer::collisions()
             Message msg = Message(MessageType::BORRAESCUDO, &(*o));
             
             for (auto it = clients.begin(); it != clients.end(); ++it)
-                    socket.send(msg, *(*it));
+                    if(socket.send(msg, *(*it)) == -1)  std::cout << "ERROR: 8 \n";;
 
             shields.erase((*o).id);
-    }
-
-    for (auto o = players.begin(); o != players.end(); ++o){
-        
-        if(nPlayerDelete == (*o).nJug){
-            Message msg = Message(MessageType::PLAYERDEAD, &(*o));
-        
-        for (auto it = clients.begin(); it != clients.end(); ++it)
-                socket.send(msg, *(*it));
-            //players.erase(o);
-        }
     }
 }

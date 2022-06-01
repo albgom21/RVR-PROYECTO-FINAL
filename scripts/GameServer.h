@@ -31,6 +31,5 @@ private:
     int nBullets = 0;
 
 
-    int nPlayerDelete = -1;
     Socket socket;
 };

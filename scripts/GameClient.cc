@@ -9,6 +9,7 @@
 
 GameClient::GameClient(const char *s, const char *p, const char *n) : socket(s, p){
     _app = Game::GetInstance();
+    lastShoot = SDL_GetTicks();
 
     for (auto &image : Resources::imageRoutes) 
         _app->getTextureManager()->loadFromImg(image.id, _app->getRenderer(), image.route);
@@ -120,6 +121,8 @@ void GameClient::net_thread()
             case MessageType::NEWESCUDO:
             {
                 GOInfo s = m.getGOInfo();
+                if(s.nJug == _myPlayer->getNum())
+                    _myPlayer->addShield();
                 shields[s.id] = s;
                 break;
             }
@@ -162,14 +165,17 @@ void GameClient::input(){
         _myPlayer->setPos({_myPlayer->getPos().getX(), _myPlayer->getPos().getY() + VELOCITY});
         posM = true;
     }
-    else if (HandleEvents::instance()->isKeyDown(SDL_SCANCODE_X) && _myPlayer->canShield() )
-    {   
-        _myPlayer->addShield();
-        escudoM = true;
+    else if (HandleEvents::instance()->isKeyDown(SDL_SCANCODE_X) )
+    {           
+        std::cout<<"ESCUDOS DE JUG: "<<_myPlayer->getNum() <<" -> " <<_myPlayer->getNumShield()<<std::endl;
+
+        if(_myPlayer->canShield())
+            escudoM = true;
     }
-    else if (HandleEvents::instance()->isKeyDown(SDL_SCANCODE_SPACE))
+    else if (HandleEvents::instance()->isKeyDown(SDL_SCANCODE_SPACE) && SDL_GetTicks() - lastShoot > delay)
     {
         balaM = true;
+        lastShoot = SDL_GetTicks();
     }
 
     //Mandar el mensaje al servidor
@@ -180,6 +186,7 @@ void GameClient::input(){
     }
     else if (escudoM && playing)
     {
+        //std::cout<<"ESCUDOS DE JUG: "<<_myPlayer->getNum() <<" -> " <<_myPlayer->getNumShield()<<std::endl;
         Message m(MessageType::ESCUDO, _myPlayer);
         socket.send(m, socket);
     }
