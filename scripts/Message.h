@@ -5,46 +5,46 @@
 #include "GOInfo.h"
 class Player;
 
-enum class MessageType: int8_t
+enum class MessageType : int8_t
 {
-    LOGIN   = 0,
-    LOGOUT  = 1,
+	LOGIN = 0,
+	LOGOUT = 1,
 
-    NEWPLAYER = 2,
-    PLAYERDEAD = 3,   
-    PLAYERPOS = 4,
+	NEWPLAYER = 2,
+	PLAYERDEAD = 3,
+	PLAYERPOS = 4,
 
-    DISPARO = 5,
-    NEWBALA = 6,
-    BALAPOS = 7,
-    BORRABALA = 8,
+	DISPARO = 5,
+	NEWBALA = 6,
+	BALAPOS = 7,
+	BORRABALA = 8,
 
-    ESCUDO = 9,
-    NEWESCUDO = 10,
-    BORRAESCUDO = 11
+	ESCUDO = 9,
+	NEWESCUDO = 10,
+	BORRAESCUDO = 11
 };
 
-class Message: public Serializable{
+class Message : public Serializable {
 protected:
-    size_t messageSize = sizeof(MessageType);
-    MessageType type;
-    GOInfo goInfo;
+	size_t messageSize = sizeof(MessageType);
+	MessageType type;
+	GOInfo goInfo;
 
 public:
-    
-    Message(){};
-    Message(MessageType type_ ,Player* player_);
-    Message(MessageType type_ ,GOInfo* obj);
-    
-    virtual ~Message(){};
 
-    virtual void to_bin();
-    virtual int from_bin(char * bobj);
+	Message() {};
+	Message(MessageType type_, Player* player_);
+	Message(MessageType type_, GOInfo* obj);
 
-    size_t getMessageSize();
-    MessageType getMessageType();
-    GOInfo getGOInfo()const{ return goInfo; }
-    void setGOInfo(const GOInfo& info){goInfo = info;}
-    void setNjugador(int16_t n);    
-    void setMsgType(MessageType type);
+	virtual ~Message() {};
+
+	virtual void to_bin();
+	virtual int from_bin(char* bobj);
+
+	size_t getMessageSize();
+	MessageType getMessageType();
+	GOInfo getGOInfo()const { return goInfo; }
+	void setGOInfo(const GOInfo& info) { goInfo = info; }
+	void setNjugador(int16_t n);
+	void setMsgType(MessageType type);
 };

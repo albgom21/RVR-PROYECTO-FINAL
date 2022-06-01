@@ -9,27 +9,26 @@
 class GameServer
 {
 public:
-    GameServer(const char * s, const char * p);
-    
-    void do_messages();   
-    void move_bullets();   
-    void collisions();
-    bool fin = false;
+	GameServer(const char* s, const char* p);
+
+	void do_messages();
+	void move_bullets();
+	void collisions();
+	bool fin = false;
 
 
 private:
-    std::vector<std::unique_ptr<Socket>> clients;
-    std::vector<GOInfo> players;
-    std::map<int16_t,GOInfo> shields;
-    std::map<int16_t,GOInfo*> bullets;
+	std::vector<std::unique_ptr<Socket>> clients;
+	std::vector<GOInfo> players;
+	std::map<int16_t, GOInfo> shields;
+	std::map<int16_t, GOInfo*> bullets;
 
-    const float timeUpdate = 10.0f;
-    float initTime = 0.0f;
-    
-    int nPlayers = 0;
-    int nShields = 0;
-    int nBullets = 0;
+	const float timeUpdate = 10.0f;
+	float initTime = 0.0f;
 
+	int nPlayers = 0;
+	int nShields = 0;
+	int nBullets = 0;
 
-    Socket socket;
+	Socket socket;
 };

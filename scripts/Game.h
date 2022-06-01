@@ -4,12 +4,12 @@
 #include "Constants.h"
 class Game {
 private:
-	
+
 	TextureManager* textureManager_ = nullptr;
 
 	SDL_Window* window_ = nullptr;
 	SDL_Renderer* renderer_ = nullptr;
-    void initSDL();
+	void initSDL();
 	void initResources();
 
 	Game();
@@ -17,20 +17,20 @@ private:
 	static Game* instance;
 
 public:
-  
-  	static Game* GetInstance();
 
-	Game(Game &other) = delete;
-    void operator=(const Game &) = delete;
-    
-    ~Game();
+	static Game* GetInstance();
+
+	Game(Game& other) = delete;
+	void operator=(const Game&) = delete;
+
+	~Game();
 
 	SDL_Window* getWindow();
 	SDL_Renderer* getRenderer();
 	TextureManager* getTextureManager();
 
 	void destroyWindow();
-  
+
 	static const int winWidth_ = W_WIDTH;
-	static const int winHeight_ = W_HEIGHT; 
+	static const int winHeight_ = W_HEIGHT;
 };

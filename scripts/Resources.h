@@ -11,7 +11,6 @@ class Resources
 {
 public:
 	enum ID : int {
-		Pug,
 		P1,
 		P2,
 		BULLET,
@@ -25,6 +24,4 @@ public:
 	};
 
 	static vector<IMG> imageRoutes;
-
-
 };

@@ -22,7 +22,7 @@ Texture::~Texture() {
 
 void Texture::close() {
 	if (texture_ != nullptr) {
-		SDL_DestroyTexture(texture_); // destruye la textura actual
+		SDL_DestroyTexture(texture_);
 		texture_ = nullptr;
 		width_ = 0;
 		height_ = 0;
@@ -32,7 +32,7 @@ void Texture::close() {
 bool Texture::loadFromImg(SDL_Renderer* renderer, const string& fileName) {
 	SDL_Surface* surface = IMG_Load(fileName.c_str());
 	if (surface != nullptr) {
-		close(); // destruye la textura actual para sustituirla
+		close();
 		texture_ = SDL_CreateTextureFromSurface(renderer, surface);
 		if (texture_ != nullptr) {
 			width_ = surface->w;
@@ -51,7 +51,7 @@ bool Texture::loadFromSurface(SDL_Renderer* renderer, SDL_Surface* src, SDL_Rect
 {
 	if (SDL_BlitSurface(src, srcRect, dest, destRect) == 0) {
 		if (dest != nullptr) {
-			close(); // destruye la textura actual para sustituirla
+			close();
 			texture_ = SDL_CreateTextureFromSurface(renderer, dest);
 			if (texture_ != nullptr) {
 				width_ = dest->w;

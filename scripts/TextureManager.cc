@@ -8,7 +8,6 @@ TextureManager::~TextureManager() {
 	if (!initialized_)
 		return;
 
-	// free all textures
 	for (const auto& pair : textures_) {
 		if (pair.second != nullptr)
 			delete pair.second;
@@ -21,7 +20,6 @@ bool TextureManager::initObject() {
 	if (initialized_)
 		return false;
 
-	// SDL Image
 	int imgInit_ret = IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF | IMG_INIT_WEBP);
 	assert(imgInit_ret != 0);
 
@@ -42,7 +40,6 @@ bool TextureManager::loadFromImg(std::size_t tag,
 		return true;
 	}
 
-	// if we get here something went wrong
 	return false;
 }
 

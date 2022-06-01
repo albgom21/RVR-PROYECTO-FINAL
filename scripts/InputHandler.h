@@ -12,7 +12,7 @@ class HandleEvents
 private:
 	static unique_ptr<HandleEvents> instance_;
 
-	const Uint8* kbState_; 
+	const Uint8* kbState_;
 	bool isKeyUp_;
 	bool isKeyDown_;
 	bool isMouseMotion_;
@@ -62,10 +62,10 @@ public:
 		return instance_.get();
 	}
 
-	
+
 	void update();
 
-	#pragma region Keyboard
+#pragma region Keyboard
 	inline bool keyDownEvent() {
 		return isKeyDown_;
 	}
@@ -89,8 +89,8 @@ public:
 	inline bool isKeyUp(SDL_Keycode key) {
 		return isKeyUp(SDL_GetScancodeFromKey(key));
 	}
-    #pragma endregion
-    #pragma region Mouse
+#pragma endregion
+#pragma region Mouse
 
 	inline bool mouseMotionEvent() {
 		return isMouseMotion_;
@@ -104,7 +104,7 @@ public:
 		return mousePos_;
 	}
 
-	
+
 	inline bool getMouseButtonState(MOUSEBUTTON button) {
 		return mbState_[button];
 	}
@@ -112,5 +112,5 @@ public:
 	inline int getMouseButtonState(int button) {
 		return mbState_[button];
 	}
-	#pragma endregion
+#pragma endregion
 };

@@ -17,7 +17,7 @@ public:
 	virtual ~Vector2D() {}
 #pragma region Getters
 	inline Vector2D getVec() const { return { x_,y_ }; };
- 	inline double_t getX() const { return x_; };
+	inline double_t getX() const { return x_; };
 	inline double_t getY() const { return y_; };
 #pragma endregion
 
@@ -38,8 +38,8 @@ public:
 #pragma endregion
 
 #pragma region Operations
-	void normalize();													
-	double magnitude()const { return sqrt(pow(x_, 2) + pow(y_, 2)); }	
-	inline double angle()const { return atan(y_ / x_); }				
+	void normalize();
+	double magnitude()const { return sqrt(pow(x_, 2) + pow(y_, 2)); }
+	inline double angle()const { return atan(y_ / x_); }
 #pragma endregion
 };
