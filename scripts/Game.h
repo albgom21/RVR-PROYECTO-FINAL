@@ -6,7 +6,6 @@ class Game {
 private:
 
 	TextureManager* textureManager_ = nullptr;
-
 	SDL_Window* window_ = nullptr;
 	SDL_Renderer* renderer_ = nullptr;
 	void initSDL();
@@ -25,9 +24,9 @@ public:
 
 	~Game();
 
+	TextureManager* getTextureManager();
 	SDL_Window* getWindow();
 	SDL_Renderer* getRenderer();
-	TextureManager* getTextureManager();
 
 	void destroyWindow();
 

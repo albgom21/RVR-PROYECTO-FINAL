@@ -3,7 +3,7 @@
 #define W_HEIGHT 600
 
 //JUEGO
-#define VELOCITY 3
+#define VELOCITY 5
 #define N_ESCUDOS 3
 
 //TAMAÑOS
