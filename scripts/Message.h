@@ -5,6 +5,7 @@
 #include "GOInfo.h"
 class Player;
 
+// Diferentes tipos de mensajes.
 enum class MessageType : int8_t
 {
 	LOGIN = 0,
@@ -26,21 +27,27 @@ enum class MessageType : int8_t
 
 class Message : public Serializable {
 protected:
+	// Tamaño del mensaje. 
 	size_t messageSize = sizeof(MessageType);
+	// Tipo del mensaje.
 	MessageType type;
+	// Información del gameObject
 	GOInfo goInfo;
 
 public:
-
+	// Diferentes constructoras.
 	Message() {};
 	Message(MessageType type_, Player* player_);
 	Message(MessageType type_, GOInfo* obj);
 
+	// Destructora,
 	virtual ~Message() {};
 
+	// Métodos de serialización.
 	virtual void to_bin();
 	virtual int from_bin(char* bobj);
 
+	// Getters y Setters.
 	size_t getMessageSize();
 	MessageType getMessageType();
 	GOInfo getGOInfo()const { return goInfo; }

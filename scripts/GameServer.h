@@ -33,7 +33,7 @@ private:
 	std::map<int16_t, GOInfo*> bullets;
 
 	// Tiempo para actualizar las balas.
-	const float timeUpdate = 10.0f;
+	const float timeUpdate = 16.66f;
 	float initTime = 0.0f;
 
 	// Contadores de jugadores, escudos y balas.
